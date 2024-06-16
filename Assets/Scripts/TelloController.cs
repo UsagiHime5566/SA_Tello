@@ -13,9 +13,23 @@ public class TelloController : SingletonMonoBehaviour<TelloController> {
 
 	private TelloVideoTexture telloVideoTexture;
 
+	public enum TelloBTN
+	{
+		Up,Down,Right,Left,
+		W,S,D,A,
+	}
+
 	public float AD_Value = 1;
 	public float WS_Value = 1;
 	public float Move_Value = 1;
+	public bool btn_Up;
+	public bool btn_Down;
+	public bool btn_Right;
+	public bool btn_Left;
+	public bool btn_W;
+	public bool btn_S;
+	public bool btn_D;
+	public bool btn_A;
 
 	// FlipType is used for the various flips supported by the Tello.
 	public enum FlipType
@@ -119,28 +133,28 @@ public class TelloController : SingletonMonoBehaviour<TelloController> {
 		float rx = 0f;
 		float ry = 0f;
 
-		if (Input.GetKey(KeyCode.UpArrow)) {
+		if (Input.GetKey(KeyCode.UpArrow) || btn_Up) {
 			ry = Move_Value;
 		}
-		if (Input.GetKey(KeyCode.DownArrow)) {
+		if (Input.GetKey(KeyCode.DownArrow) || btn_Down) {
 			ry = -Move_Value;
 		}
-		if (Input.GetKey(KeyCode.RightArrow)) {
+		if (Input.GetKey(KeyCode.RightArrow) || btn_Right) {
 			rx = Move_Value;
 		}
-		if (Input.GetKey(KeyCode.LeftArrow)) {
+		if (Input.GetKey(KeyCode.LeftArrow) || btn_Left) {
 			rx = -Move_Value;
 		}
-		if (Input.GetKey(KeyCode.W)) {
+		if (Input.GetKey(KeyCode.W) || btn_W) {
 			ly = WS_Value;
 		}
-		if (Input.GetKey(KeyCode.S)) {
+		if (Input.GetKey(KeyCode.S) || btn_S) {
 			ly = -WS_Value;
 		}
-		if (Input.GetKey(KeyCode.D)) {
+		if (Input.GetKey(KeyCode.D) || btn_D) {
 			lx = AD_Value;
 		}
-		if (Input.GetKey(KeyCode.A)) {
+		if (Input.GetKey(KeyCode.A) || btn_A) {
 			lx = -AD_Value;
 		}
 		Tello.controllerState.setAxis(lx, ly, rx, ry);
