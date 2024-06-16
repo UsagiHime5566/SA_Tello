@@ -13,6 +13,10 @@ public class TelloController : SingletonMonoBehaviour<TelloController> {
 
 	private TelloVideoTexture telloVideoTexture;
 
+	public float AD_Value = 1;
+	public float WS_Value = 1;
+	public float Move_Value = 1;
+
 	// FlipType is used for the various flips supported by the Tello.
 	public enum FlipType
 	{
@@ -104,9 +108,9 @@ public class TelloController : SingletonMonoBehaviour<TelloController> {
 	// Update is called once per frame
 	void Update () {
 
-		if (Input.GetKeyDown(KeyCode.T)) {
+		if (Input.GetKeyDown(KeyCode.Space)) {
 			Tello.takeOff();
-		} else if (Input.GetKeyDown(KeyCode.L)) {
+		} else if (Input.GetKeyDown(KeyCode.Delete)) {
 			Tello.land();
 		}
 
@@ -116,28 +120,28 @@ public class TelloController : SingletonMonoBehaviour<TelloController> {
 		float ry = 0f;
 
 		if (Input.GetKey(KeyCode.UpArrow)) {
-			ry = 1;
+			ry = Move_Value;
 		}
 		if (Input.GetKey(KeyCode.DownArrow)) {
-			ry = -1;
+			ry = -Move_Value;
 		}
 		if (Input.GetKey(KeyCode.RightArrow)) {
-			rx = 1;
+			rx = Move_Value;
 		}
 		if (Input.GetKey(KeyCode.LeftArrow)) {
-			rx = -1;
+			rx = -Move_Value;
 		}
 		if (Input.GetKey(KeyCode.W)) {
-			ly = 1;
+			ly = WS_Value;
 		}
 		if (Input.GetKey(KeyCode.S)) {
-			ly = -1;
+			ly = -WS_Value;
 		}
 		if (Input.GetKey(KeyCode.D)) {
-			lx = 1;
+			lx = AD_Value;
 		}
 		if (Input.GetKey(KeyCode.A)) {
-			lx = -1;
+			lx = -AD_Value;
 		}
 		Tello.controllerState.setAxis(lx, ly, rx, ry);
 
