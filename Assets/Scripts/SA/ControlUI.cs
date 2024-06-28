@@ -9,7 +9,12 @@ public class ControlUI : MonoBehaviour
     public InputField Rotate;
     public InputField UpDown;
     public InputField Move;
+    public Text TXT_Informations;
+    public List<InfoSlot> slot;
     public float everyAdjust = 0.2f;
+
+    System.Action mainThread;
+
     void Start()
     {
         Rotate.onValueChanged.AddListener(x => {
@@ -31,7 +36,13 @@ public class ControlUI : MonoBehaviour
         Rotate.text = SystemConfig.Instance.GetData<float>("rot", 1).ToString("0.0");
         UpDown.text = SystemConfig.Instance.GetData<float>("updown", 1).ToString("0.0");
         Move.text = SystemConfig.Instance.GetData<float>("move", 1).ToString("0.0");
+    }
 
+    void Update(){
+        if(mainThread != null){
+            mainThread.Invoke();
+            mainThread = null;
+        }
     }
 
     public void DownValues(){
@@ -44,5 +55,25 @@ public class ControlUI : MonoBehaviour
         Rotate.text = Mathf.Min(3, telloController.AD_Value+everyAdjust).ToString("0.0");
         UpDown.text = Mathf.Min(3, telloController.WS_Value+everyAdjust).ToString("0.0");
         Move.text = Mathf.Min(3, telloController.Move_Value+everyAdjust).ToString("0.0");
+    }
+
+    public void ParseCommand(System.Action callback){
+        mainThread = callback;
+    }
+
+    public void ShowInfo(string msg){
+        mainThread = () => {
+            TXT_Informations.text = msg;
+        };
+    }
+
+    public void ShowBoxInfo(List<string> str){
+        mainThread = () => {
+            for (int i = 0; i < str.Count; i++)
+            {
+                if(i >= slot.Count) break;
+                slot[i].SetSlot(str[i]);
+            }
+        };
     }
 }

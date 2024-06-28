@@ -1220,6 +1220,15 @@ namespace TelloLib
 
                 return sb.ToString();
             }
+
+            public List<string> ToStringList(){
+                List<string> result = new List<string>();
+                foreach (System.Reflection.FieldInfo property in this.GetType().GetFields())
+                {
+                    result.Add($"{property.Name}: {property.GetValue(this)}");
+                }
+                return result;
+            }
         }
 
     }

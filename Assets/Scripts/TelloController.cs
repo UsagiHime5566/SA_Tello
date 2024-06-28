@@ -11,11 +11,8 @@ using System;
 public class TelloController : SingletonMonoBehaviour<TelloController> {
 
 	public ControlUI controlUI;
-	public Text informations;
 	public InputField INP_SDKCommand;
-
 	private static bool isLoaded = false;
-
 	private TelloVideoTexture telloVideoTexture;
 
 	public enum TelloBTN
@@ -183,7 +180,8 @@ public class TelloController : SingletonMonoBehaviour<TelloController> {
 	{
 		//throw new System.NotImplementedException();
 		//Debug.Log("Tello_onUpdate : " + Tello.state);
-		informations.text = $"{Tello.state}";
+		//controlUI.ShowInfo($"s {Tello.state}");
+		controlUI.ShowBoxInfo(Tello.state.ToStringList());
 	}
 
 	private void Tello_onConnection(Tello.ConnectionState newState)
