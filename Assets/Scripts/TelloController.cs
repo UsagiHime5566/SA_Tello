@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TelloLib;
 using System.Net.Sockets;
 using System.Net;
@@ -9,6 +10,10 @@ using System;
 
 public class TelloController : SingletonMonoBehaviour<TelloController> {
 
+	public ControlUI controlUI;
+	public Text informations;
+	public InputField INP_SDKCommand;
+
 	private static bool isLoaded = false;
 
 	private TelloVideoTexture telloVideoTexture;
@@ -16,7 +21,7 @@ public class TelloController : SingletonMonoBehaviour<TelloController> {
 	public enum TelloBTN
 	{
 		Up,Down,Right,Left,
-		W,S,D,A,
+		W,S,D,A,Q,E
 	}
 
 	public float AD_Value = 1;
@@ -30,6 +35,8 @@ public class TelloController : SingletonMonoBehaviour<TelloController> {
 	public bool btn_S;
 	public bool btn_D;
 	public bool btn_A;
+	public bool btn_Q;
+	public bool btn_E;
 
 	// FlipType is used for the various flips supported by the Tello.
 	public enum FlipType
@@ -112,6 +119,11 @@ public class TelloController : SingletonMonoBehaviour<TelloController> {
 			telloVideoTexture = FindObjectOfType<TelloVideoTexture>();
 
 		Tello.startConnecting();
+
+		INP_SDKCommand.onEndEdit.AddListener(x => {
+			Tello.Client.SendUTF(x);
+			INP_SDKCommand.text = "";
+		});
 	}
 
 	void OnApplicationQuit()
@@ -124,7 +136,7 @@ public class TelloController : SingletonMonoBehaviour<TelloController> {
 
 		if (Input.GetKeyDown(KeyCode.Space)) {
 			Tello.takeOff();
-		} else if (Input.GetKeyDown(KeyCode.Delete)) {
+		} else if (Input.GetKeyDown(KeyCode.Alpha0) || Input.GetKeyDown(KeyCode.Keypad0)) {
 			Tello.land();
 		}
 
@@ -157,6 +169,12 @@ public class TelloController : SingletonMonoBehaviour<TelloController> {
 		if (Input.GetKey(KeyCode.A) || btn_A) {
 			lx = -AD_Value;
 		}
+		if (Input.GetKeyDown(KeyCode.Q)) {
+			controlUI.DownValues();
+		}
+		if (Input.GetKeyDown(KeyCode.E)) {
+			controlUI.UpValues();
+		}
 		Tello.controllerState.setAxis(lx, ly, rx, ry);
 
 	}
@@ -164,7 +182,8 @@ public class TelloController : SingletonMonoBehaviour<TelloController> {
 	private void Tello_onUpdate(int cmdId)
 	{
 		//throw new System.NotImplementedException();
-		Debug.Log("Tello_onUpdate : " + Tello.state);
+		//Debug.Log("Tello_onUpdate : " + Tello.state);
+		informations.text = $"{Tello.state}";
 	}
 
 	private void Tello_onConnection(Tello.ConnectionState newState)
@@ -189,4 +208,10 @@ public class TelloController : SingletonMonoBehaviour<TelloController> {
 			telloVideoTexture.PutVideoData(data);
 	}
 
+	public void TelloTakeOff(){
+		Tello.takeOff();
+	}
+	public void TelloLand(){
+		Tello.land();
+	}
 }

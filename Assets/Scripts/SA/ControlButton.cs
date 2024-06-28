@@ -44,6 +44,12 @@ public class ControlButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
             case TelloController.TelloBTN.A:
                 TelloController.Instance.btn_A = val;
                 break;
+            case TelloController.TelloBTN.Q:
+                TelloController.Instance.btn_Q = val;
+                break;
+            case TelloController.TelloBTN.E:
+                TelloController.Instance.btn_E = val;
+                break;
         }
     }
 }

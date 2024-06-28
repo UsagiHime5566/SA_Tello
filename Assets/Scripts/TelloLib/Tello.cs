@@ -10,6 +10,7 @@ namespace TelloLib
 {
     public class Tello
     {
+        public static UdpUser Client => client;
         private static UdpUser client;
         private static DateTime lastMessageTime;//for connection timeouts.
 

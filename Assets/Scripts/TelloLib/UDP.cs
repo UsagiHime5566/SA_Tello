@@ -82,5 +82,10 @@ namespace TelloLib
         {
             Client.Send(message, message.Length);
         }
+        public void SendUTF(string message)
+        {
+            var datagram = Encoding.UTF8.GetBytes(message);
+            Client.Send(datagram, datagram.Length);
+        }
     }
 }
