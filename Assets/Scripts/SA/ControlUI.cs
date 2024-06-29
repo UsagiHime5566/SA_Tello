@@ -9,6 +9,20 @@ public class ControlUI : MonoBehaviour
     public InputField Rotate;
     public InputField UpDown;
     public InputField Move;
+
+    public InputField RotateOne;
+    public InputField UpDownOne;
+    public InputField MoveOne;
+
+    public Button BTN_W;
+    public Button BTN_S;
+    public Button BTN_A;
+    public Button BTN_D;
+    public Button BTN_UP;
+    public Button BTN_DOWN;
+    public Button BTN_LEFT;
+    public Button BTN_RIGHT;
+
     public Text TXT_Informations;
     public List<InfoSlot> slot;
     public float everyAdjust = 0.2f;
@@ -36,6 +50,36 @@ public class ControlUI : MonoBehaviour
         Rotate.text = SystemConfig.Instance.GetData<float>("rot", 1).ToString("0.0");
         UpDown.text = SystemConfig.Instance.GetData<float>("updown", 1).ToString("0.0");
         Move.text = SystemConfig.Instance.GetData<float>("move", 1).ToString("0.0");
+
+        RotateOne.onValueChanged.AddListener(x => {
+            float.TryParse(x, out float f);
+            telloController.AD_ValueOne = f;
+            SystemConfig.Instance.SaveData("rotOne", f);
+        });
+        UpDownOne.onValueChanged.AddListener(x => {
+            float.TryParse(x, out float f);
+            telloController.WS_ValueOne = f;
+            SystemConfig.Instance.SaveData("updownOne", f);
+        });
+        MoveOne.onValueChanged.AddListener(x => {
+            float.TryParse(x, out float f);
+            telloController.Move_ValueOne = f;
+            SystemConfig.Instance.SaveData("moveOne", f);
+        });
+
+        RotateOne.text = SystemConfig.Instance.GetData<float>("rotOne", 1).ToString("0.0");
+        UpDownOne.text = SystemConfig.Instance.GetData<float>("updownOne", 1).ToString("0.0");
+        MoveOne.text = SystemConfig.Instance.GetData<float>("moveOne", 1).ToString("0.0");
+
+
+        BTN_W.onClick.AddListener(telloController.Tello_W);
+        BTN_S.onClick.AddListener(telloController.Tello_S);
+        BTN_A.onClick.AddListener(telloController.Tello_A);
+        BTN_D.onClick.AddListener(telloController.Tello_D);
+        BTN_UP.onClick.AddListener(telloController.Tello_UP);
+        BTN_DOWN.onClick.AddListener(telloController.Tello_DOWN);
+        BTN_LEFT.onClick.AddListener(telloController.Tello_LEFT);
+        BTN_RIGHT.onClick.AddListener(telloController.Tello_RIGHT);
     }
 
     void Update(){

@@ -6,6 +6,7 @@ using TelloLib;
 using System.Net.Sockets;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using System;
 
 public class TelloController : SingletonMonoBehaviour<TelloController> {
@@ -24,6 +25,9 @@ public class TelloController : SingletonMonoBehaviour<TelloController> {
 	public float AD_Value = 1;
 	public float WS_Value = 1;
 	public float Move_Value = 1;
+	public float AD_ValueOne = 1;
+	public float WS_ValueOne = 1;
+	public float Move_ValueOne = 1;
 	public bool btn_Up;
 	public bool btn_Down;
 	public bool btn_Right;
@@ -34,6 +38,7 @@ public class TelloController : SingletonMonoBehaviour<TelloController> {
 	public bool btn_A;
 	public bool btn_Q;
 	public bool btn_E;
+	public bool keyMode = false;
 
 	// FlipType is used for the various flips supported by the Tello.
 	public enum FlipType
@@ -121,6 +126,8 @@ public class TelloController : SingletonMonoBehaviour<TelloController> {
 			Tello.Client.SendUTF(x);
 			INP_SDKCommand.text = "";
 		});
+
+		keyMode = false;
 	}
 
 	void OnApplicationQuit()
@@ -130,6 +137,13 @@ public class TelloController : SingletonMonoBehaviour<TelloController> {
 
 	// Update is called once per frame
 	void Update () {
+
+		if (Input.GetKeyDown(KeyCode.Q)) {
+			controlUI.DownValues();
+		}
+		if (Input.GetKeyDown(KeyCode.E)) {
+			controlUI.UpValues();
+		}
 
 		if (Input.GetKeyDown(KeyCode.Space)) {
 			Tello.takeOff();
@@ -141,6 +155,10 @@ public class TelloController : SingletonMonoBehaviour<TelloController> {
 		float ly = 0f;
 		float rx = 0f;
 		float ry = 0f;
+
+		if(keyMode){
+			return;
+		}
 
 		if (Input.GetKey(KeyCode.UpArrow) || btn_Up) {
 			ry = Move_Value;
@@ -166,14 +184,7 @@ public class TelloController : SingletonMonoBehaviour<TelloController> {
 		if (Input.GetKey(KeyCode.A) || btn_A) {
 			lx = -AD_Value;
 		}
-		if (Input.GetKeyDown(KeyCode.Q)) {
-			controlUI.DownValues();
-		}
-		if (Input.GetKeyDown(KeyCode.E)) {
-			controlUI.UpValues();
-		}
 		Tello.controllerState.setAxis(lx, ly, rx, ry);
-
 	}
 
 	private void Tello_onUpdate(int cmdId)
@@ -211,5 +222,40 @@ public class TelloController : SingletonMonoBehaviour<TelloController> {
 	}
 	public void TelloLand(){
 		Tello.land();
+	}
+
+	public void Tello_W(){
+		Tello_Single(0, WS_ValueOne, 0, 0);
+	}
+	public void Tello_S(){
+		Tello_Single(0, -WS_ValueOne, 0, 0);
+	}
+	public void Tello_A(){
+		Tello_Single(-AD_ValueOne, 0, 0, 0);
+	}
+	public void Tello_D(){
+		Tello_Single(AD_ValueOne, 0, 0, 0);
+	}
+	public void Tello_UP(){
+		Tello_Single(0, 0, 0, Move_ValueOne);
+	}
+	public void Tello_DOWN(){
+		Tello_Single(0, 0, 0, -Move_ValueOne);
+	}
+	public void Tello_LEFT(){
+		Tello_Single(0, 0, -Move_ValueOne, 0);
+	}
+	public void Tello_RIGHT(){
+		Tello_Single(0, 0, Move_ValueOne, 0);
+	}
+
+	public async void Tello_Single(float lx, float ly, float rx, float ry){
+		keyMode = true;
+		Tello.controllerState.setAxis(lx, ly, rx, ry);
+
+		await Task.Delay(500);
+
+		Tello.controllerState.setAxis(0, 0, 0, 0);
+		keyMode = false;
 	}
 }
