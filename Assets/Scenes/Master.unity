@@ -7995,7 +7995,7 @@ MonoBehaviour:
   - {fileID: 851130344}
   - {fileID: 284989425}
   - {fileID: 1629973588}
-  everyAdjust: 0.2
+  everyAdjust: 0.1
 --- !u!4 &1029915545
 Transform:
   m_ObjectHideFlags: 0
